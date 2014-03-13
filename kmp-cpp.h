@@ -41,16 +41,15 @@ public:
         if (m <= 0) {
             return;
         }
-        skip_.resize(m, -2);
         long i = 0, j = -1;
-        skip_[i] = j;
+        skip_.push_back(j);
         while (i < m) {
             while (j >= 0 && begin[i] != begin[j]) {
                 j = skip_[j];
             }
             i++;
             j++;
-            skip_[i] = j;
+            skip_.push_back(j);
         }
     }
 
