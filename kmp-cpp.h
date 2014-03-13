@@ -8,7 +8,18 @@ namespace kmp {
 namespace detail {
 
 struct true_tag {};
+
 struct false_tag {};
+
+template <class T, class U>
+struct same_type {
+    typedef false_tag tag;
+};
+
+template <class T>
+struct same_type<T, T> {
+    typedef true_tag tag;
+};
 
 // http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/kmpen.htm
 // requires random access iterator
@@ -103,16 +114,6 @@ public:
         }
         return idx;
     }
-};
-
-template <class T, class U>
-struct same_type {
-    typedef false_tag tag;
-};
-
-template <class T>
-struct same_type<T, T> {
-    typedef true_tag tag;
 };
 
 } // namespace detail
