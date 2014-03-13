@@ -87,7 +87,8 @@ public:
     std::vector<long> match_all(HaystackIterator h_begin,
                                 HaystackIterator h_end,
                                 std::random_access_iterator_tag,
-                                true_tag) const {
+                                true_tag,
+                                bool overlap = true) const {
 
         std::vector<long> idx;
         long m = n_end_ - n_begin_;
@@ -108,7 +109,11 @@ public:
             j++;
             if (j == m) {
                 idx.push_back(i - j);
-                j = skip_[j];
+                if (overlap) {
+                    j = skip_[j];
+                } else {
+                    j = 0;
+                }
             }
         }
         return idx;
@@ -138,14 +143,14 @@ public:
     }
 
     template <class HaystackIterator>
-    std::vector<long> match_all(HaystackIterator h_begin, HaystackIterator h_end) {
+    std::vector<long> match_all(HaystackIterator h_begin, HaystackIterator h_end, bool overlap = true) {
         typedef typename std::iterator_traits<HaystackIterator>::iterator_category iterator_check;
 
         typedef typename detail::same_type<
             typename std::iterator_traits<NeedleIterator>::value_type,
             typename std::iterator_traits<HaystackIterator>::value_type>::tag type_check;
 
-        return pattern_.match_all(h_begin, h_end, iterator_check(), type_check());
+        return pattern_.match_all(h_begin, h_end, iterator_check(), type_check(), overlap);
     }
 };
 
@@ -162,9 +167,10 @@ template <class NeedleIterator, class HaystackIterator>
 std::vector<long> match_all(const NeedleIterator& n_begin,
                             const NeedleIterator& n_end,
                             const HaystackIterator& h_begin,
-                            const HaystackIterator& h_end) {
+                            const HaystackIterator& h_end,
+                            bool overlap = true) {
 
-    return pattern<NeedleIterator>(n_begin, n_end).match_all(h_begin, h_end);
+    return pattern<NeedleIterator>(n_begin, n_end).match_all(h_begin, h_end, overlap);
 }
 
 } // namespace kmp

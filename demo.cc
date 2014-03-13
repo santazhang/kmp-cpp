@@ -52,6 +52,26 @@ void kmp_match_all() {
     cout << matches.size() << endl;
 }
 
+void kmp_match_all_overlapping() {
+    string needle = "rr";
+    string haystack = "rrrr";
+    vector<long> matches = kmp::match_all(needle.begin(), needle.end(), haystack.begin(), haystack.end());
+    cout << matches.size() << endl;
+    for (size_t i = 0; i < matches.size(); i++) {
+        cout << "> " << matches[i] << endl;
+    }
+}
+
+void kmp_match_all_no_overlapping() {
+    string needle = "rr";
+    string haystack = "rrrr";
+    vector<long> matches = kmp::match_all(needle.begin(), needle.end(), haystack.begin(), haystack.end(), false);
+    cout << matches.size() << endl;
+    for (size_t i = 0; i < matches.size(); i++) {
+        cout << "> " << matches[i] << endl;
+    }
+}
+
 // #include <list>
 // void kmp_cannot_compile() {
 //     list<int> needle;
@@ -73,6 +93,8 @@ int main() {
     kmp_c_int_array();
     kmp_match_first();
     kmp_match_all();
+    kmp_match_all_overlapping();
+    kmp_match_all_no_overlapping();
     // kmp_cannot_compile();
     // kmp_cannot_compile_2();
     return 0;
