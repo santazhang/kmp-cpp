@@ -7,20 +7,6 @@ namespace kmp {
 
 namespace detail {
 
-struct true_tag {};
-
-struct false_tag {};
-
-template <class T, class U>
-struct same_type {
-    typedef false_tag tag;
-};
-
-template <class T>
-struct same_type<T, T> {
-    typedef true_tag tag;
-};
-
 // http://www.inf.fh-flensburg.de/lang/algorithmen/pattern/kmpen.htm
 // requires random access iterator
 // requires same value_type for iterators
@@ -57,7 +43,7 @@ public:
     long match_first(HaystackIterator h_begin,
                      HaystackIterator h_end,
                      std::random_access_iterator_tag,
-                     true_tag) const {
+                     std::true_type) const {
 
         long match = -1;
         long m = n_end_ - n_begin_;
@@ -87,7 +73,7 @@ public:
     std::vector<long> match_all(HaystackIterator h_begin,
                                 HaystackIterator h_end,
                                 std::random_access_iterator_tag,
-                                true_tag,
+                                std::true_type,
                                 bool overlap = true) const {
 
         std::vector<long> idx;
@@ -135,9 +121,9 @@ public:
     long match_first(HaystackIterator h_begin, HaystackIterator h_end) {
         typedef typename std::iterator_traits<HaystackIterator>::iterator_category iterator_check;
 
-        typedef typename detail::same_type<
+        typedef typename std::is_same<
             typename std::iterator_traits<NeedleIterator>::value_type,
-            typename std::iterator_traits<HaystackIterator>::value_type>::tag type_check;
+            typename std::iterator_traits<HaystackIterator>::value_type> type_check;
 
         return pattern_.match_first(h_begin, h_end, iterator_check(), type_check());
     }
@@ -146,9 +132,9 @@ public:
     std::vector<long> match_all(HaystackIterator h_begin, HaystackIterator h_end, bool overlap = true) {
         typedef typename std::iterator_traits<HaystackIterator>::iterator_category iterator_check;
 
-        typedef typename detail::same_type<
+        typedef typename std::is_same<
             typename std::iterator_traits<NeedleIterator>::value_type,
-            typename std::iterator_traits<HaystackIterator>::value_type>::tag type_check;
+            typename std::iterator_traits<HaystackIterator>::value_type> type_check;
 
         return pattern_.match_all(h_begin, h_end, iterator_check(), type_check(), overlap);
     }
